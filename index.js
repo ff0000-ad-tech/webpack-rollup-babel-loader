@@ -105,7 +105,7 @@ module.exports = function(source, sourceMap) {
 		// instead of on every .js file thru Webpack Loader
 		var babelRes = babel.transform(result.code, options)
 
-		callback(null, babelRes.code, result.map);
+		callback(null, babelRes.code, babelRes.map);
 	}, function(err) {
 		callback(err);
 	});
