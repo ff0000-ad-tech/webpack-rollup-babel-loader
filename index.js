@@ -5,6 +5,10 @@
 
 'use strict';
 
+// FOR TESTING:
+// Applying Babel transform on non-Babel-ed Rollup bundle instead of thru Babel loader
+var babel = require('babel-core')
+
 var path = require('path');
 var importFresh = require('import-fresh');
 // Rollup seems to have global state, so get a fresh instance for every run...
@@ -80,7 +84,28 @@ module.exports = function(source, sourceMap) {
 		return bundle.generate({ format: 'es', sourcemap: true });
 	})
 	.then(function(result) {
-		callback(null, result.code, result.map);
+
+		// current Babel options as of 1/8/18
+		var options = {
+			"presets": [
+				[
+					"env",
+					{
+						"loose": true,
+						"modules": false
+					}
+				]
+			],
+			"plugins": [
+				"transform-class-properties"
+			]
+		}
+
+		// apply Babel transform to Bundle directly from output
+		// instead of on every .js file thru Webpack Loader
+		var babelRes = babel.transform(result.code, options)
+
+		callback(null, babelRes.code, result.map);
 	}, function(err) {
 		callback(err);
 	});
