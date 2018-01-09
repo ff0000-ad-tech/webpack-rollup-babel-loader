@@ -1,14 +1,14 @@
 {
-  "name": "webpack-rollup-loader",
+  "name": "webpack-rollup-babel-loader",
   "version": "0.6.0",
-  "description": "Webpack loader that uses Rollup, which calls back into Webpack for module resolution.",
+  "description": "Forked from erikdesjardins/webpack-rollup-loader, this loader applies Babel transformations after Rollup compiles a bundle to prevent Babel from affecting Rollup's tree shaking.",
   "main": "index.js",
   "scripts": {
     "test": "ava test/test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/erikdesjardins/webpack-rollup-loader.git"
+    "url": "git+https://github.com/derekmiranda/webpack-rollup-babel-loader.git"
   },
   "keywords": [
     "webpack"
@@ -16,9 +16,9 @@
   "author": "Erik Desjardins",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/erikdesjardins/webpack-rollup-loader/issues"
+    "url": "https://github.com/derekmiranda/webpack-rollup-babel-loader/issues"
   },
-  "homepage": "https://github.com/erikdesjardins/webpack-rollup-loader#readme",
+  "homepage": "https://github.com/derekmiranda/webpack-rollup-babel-loader#readme",
   "peerDependencies": {
     "webpack": ">=3.3.0",
     "rollup": ">=0.50.0"

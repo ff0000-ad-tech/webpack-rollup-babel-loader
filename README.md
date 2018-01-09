@@ -1,12 +1,10 @@
-# webpack-rollup-loader [![Build Status](https://travis-ci.org/erikdesjardins/webpack-rollup-loader.svg?branch=master)](https://travis-ci.org/erikdesjardins/webpack-rollup-loader)
+# webpack-rollup-babel-loader
 
-Webpack loader that uses Rollup, which calls back into Webpack for module resolution.
-
-Inspired by [egoist/rollup-loader](https://github.com/egoist/rollup-loader), but because this loader uses Webpack's module resolution, Rollup is able to hoist the output of non-js loaders, such as filenames from `file-loader`.
+Forked from [erikdesjardins/webpack-rollup-loader](https://github.com/erikdesjardins/webpack-rollup-loader), this loader applies Babel transformations after Rollup compiles a bundle to prevent Babel from affecting Rollup's tree shaking.
 
 ## Installation
   
-`npm install --save-dev webpack-rollup-loader`
+`npm install --save-dev webpack-rollup-babel-loader` *TODO: register on NPM*
 
 Rollup is a peer dependency, and must also be installed:
 
