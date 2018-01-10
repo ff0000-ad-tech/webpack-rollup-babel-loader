@@ -66,3 +66,46 @@ test('simple', fixture, 'simple.js');
 test('plugins option', fixture, 'fileLoader.js', { plugins: [commonjs({ extensions: ['.js', '.jpg'] })] });
 
 test('external option', fixture, 'external.js', { external: [path.join(__dirname, 'src', 'b.js')] });
+
+test('transpiles ES6 to ES5 w/ Babel settings', async t => {
+	const entryPath = path.join(__dirname, 'src', 'fixtures', 'es6_file.js');
+	const compiler = webpack({
+		entry: entryPath,
+		bail: true,
+		output: {
+			path: '/',
+			filename: 'bundle.js'
+		},
+		devtool: 'source-map',
+		module: {
+			rules: [{
+				test: entryPath,
+				use: [{
+					loader: path.join(__dirname, '../index.js'),
+					options: {
+						babelOptions: {
+							presets: ['env']
+						}
+					}
+				}]
+			}],
+		},
+	});
+
+	const mockFs = new MemoryFS();
+
+	compiler.outputFileSystem = mockFs;
+
+	await new Promise((resolve, reject) => {
+		compiler.run((err, stats) => {
+			err ? reject(err) : resolve(stats);
+		});
+	});
+
+	const transpiledSrc = mockFs.readFileSync('/bundle.js', 'utf8')
+
+	// doesn't use "const" keyword
+	t.false(/const\s+\w+\s*=/.test(transpiledSrc))
+	// doesn't use arrow funcs
+	t.false(/\(\s*\)\s*=\s*>/.test(transpiledSrc))
+})
