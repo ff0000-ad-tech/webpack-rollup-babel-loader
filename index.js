@@ -5,10 +5,7 @@
 
 'use strict';
 
-// FOR TESTING:
-// Applying Babel transform on non-Babel-ed Rollup bundle instead of thru Babel loader
 var babel = require('babel-core')
-
 var path = require('path');
 var importFresh = require('import-fresh');
 // Rollup seems to have global state, so get a fresh instance for every run...
@@ -35,6 +32,10 @@ module.exports = function(source, sourceMap) {
 	var callback = this.async();
 
 	var options = this.query || {};
+	var babelOptions = options.babelOptions || {};
+	
+	// delete this key to prevent Rollup from complaining
+	delete options.babelOptions;
 
 	var entryId = this.resourcePath;
 
@@ -100,7 +101,6 @@ module.exports = function(source, sourceMap) {
 		// 		"transform-class-properties"
 		// 	]
 		// }
-		var babelOptions = options.babelOptions || {}
 
 		// apply Babel transform to Bundle directly from output
 		// instead of on every .js file thru Webpack Loader
