@@ -48,8 +48,12 @@ module.exports = {
 
       // ...other rules as usual
       {
-        test: /\.js$/,
-        use: ['babel-loader'] // can be applied to .js files as usual
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+        ]
       }
     ]
   }
