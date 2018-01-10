@@ -4,6 +4,7 @@ import test from 'ava';
 import webpack from 'webpack';
 import MemoryFS from 'memory-fs';
 import commonjs from 'rollup-plugin-commonjs';
+import { verifyNoES6, writeBabelrc } from './utils';
 
 function normalize(string) {
 	return string
@@ -90,15 +91,19 @@ test('transpiles ES6 to ES5 w/ Babel settings', async t => {
 	});
 
 	const transpiledSrc = mockFs.readFileSync('/bundle.js', 'utf8')
-
-	// doesn't use "const" keyword
-	t.false(/const\s+\w+\s*=/.test(transpiledSrc))
-	// doesn't use arrow funcs
-	t.false(/\(\s*\)\s*=\s*>/.test(transpiledSrc))
+	verifyNoES6(t, transpiledSrc);
 })
 
-function setupBabelrc(mockFs) {
-	mockFs.writeFileSync()
-}
+test("Reads importing package's .babelrc if no babelOptions", async t => {
+	const { mockFs, compiler } = setupEnv('es6_file.js');
+	writeBabelrc(mockFs);
 
-test.todo("Reads importing package's .babelrc if no babelOptions")
+	await new Promise((resolve, reject) => {
+		compiler.run((err, stats) => {
+			err ? reject(err) : resolve(stats);
+		});
+	});
+
+	const transpiledSrc = mockFs.readFileSync('/bundle.js', 'utf8')
+	verifyNoES6(t, transpiledSrc);
+})
