@@ -11,7 +11,7 @@ function normalize(string) {
 		.trim();
 }
 
-async function fixture(t, entry, options) {
+function setupEnv(entry, options) {
 	const entryPath = path.join(__dirname, 'src', 'fixtures', entry);
 	const compiler = webpack({
 		entry: entryPath,
@@ -35,6 +35,15 @@ async function fixture(t, entry, options) {
 	const mockFs = new MemoryFS();
 
 	compiler.outputFileSystem = mockFs;
+
+	return {
+		mockFs,
+		compiler,
+	}
+}
+
+async function fixture(t, entry, options) {
+	const { mockFs, compiler } = setupEnv(entry, options); 	
 
 	await new Promise((resolve, reject) => {
 		compiler.run((err, stats) => {
@@ -68,33 +77,11 @@ test('plugins option', fixture, 'fileLoader.js', { plugins: [commonjs({ extensio
 test('external option', fixture, 'external.js', { external: [path.join(__dirname, 'src', 'b.js')] });
 
 test('transpiles ES6 to ES5 w/ Babel settings', async t => {
-	const entryPath = path.join(__dirname, 'src', 'fixtures', 'es6_file.js');
-	const compiler = webpack({
-		entry: entryPath,
-		bail: true,
-		output: {
-			path: '/',
-			filename: 'bundle.js'
-		},
-		devtool: 'source-map',
-		module: {
-			rules: [{
-				test: entryPath,
-				use: [{
-					loader: path.join(__dirname, '../index.js'),
-					options: {
-						babelOptions: {
-							presets: ['env']
-						}
-					}
-				}]
-			}],
-		},
-	});
-
-	const mockFs = new MemoryFS();
-
-	compiler.outputFileSystem = mockFs;
+	const { mockFs, compiler } = setupEnv('es6_file.js', {
+		babelOptions: {
+			presets: ['env']
+		}
+	})
 
 	await new Promise((resolve, reject) => {
 		compiler.run((err, stats) => {
@@ -109,5 +96,9 @@ test('transpiles ES6 to ES5 w/ Babel settings', async t => {
 	// doesn't use arrow funcs
 	t.false(/\(\s*\)\s*=\s*>/.test(transpiledSrc))
 })
+
+function setupBabelrc(mockFs) {
+	mockFs.writeFileSync()
+}
 
 test.todo("Reads importing package's .babelrc if no babelOptions")
