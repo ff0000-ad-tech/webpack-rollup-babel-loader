@@ -109,3 +109,5 @@ test('transpiles ES6 to ES5 w/ Babel settings', async t => {
 	// doesn't use arrow funcs
 	t.false(/\(\s*\)\s*=\s*>/.test(transpiledSrc))
 })
+
+test.todo("Reads importing package's .babelrc if no babelOptions")
