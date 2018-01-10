@@ -86,24 +86,25 @@ module.exports = function(source, sourceMap) {
 	.then(function(result) {
 
 		// current Babel options as of 1/8/18
-		var options = {
-			"presets": [
-				[
-					"env",
-					{
-						"loose": true,
-						"modules": false
-					}
-				]
-			],
-			"plugins": [
-				"transform-class-properties"
-			]
-		}
+		// var babelOptions = {
+		// 	"presets": [
+		// 		[
+		// 			"env",
+		// 			{
+		// 				"loose": true,
+		// 				"modules": false
+		// 			}
+		// 		]
+		// 	],
+		// 	"plugins": [
+		// 		"transform-class-properties"
+		// 	]
+		// }
+		var babelOptions = options.babelOptions || {}
 
 		// apply Babel transform to Bundle directly from output
 		// instead of on every .js file thru Webpack Loader
-		var babelRes = babel.transform(result.code, options)
+		var babelRes = babel.transform(result.code, babelOptions)
 
 		callback(null, babelRes.code, babelRes.map);
 	}, function(err) {
