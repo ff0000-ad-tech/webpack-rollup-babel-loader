@@ -8,6 +8,12 @@
 var babel = require('babel-core')
 var path = require('path');
 var importFresh = require('import-fresh');
+var fs = require('fs')
+
+var resolveRc = require('./lib/resolve-rc.js')
+var exists = require('./lib/exists.js')
+var { getRemainingRequest } = require('loader-utils')
+
 // Rollup seems to have global state, so get a fresh instance for every run...
 function getRollupInstance() {
 	return importFresh('rollup');
@@ -28,14 +34,40 @@ function splitRequest(request) {
 	}
 }
 
+function getExternalBabelOptions() {
+	const fileSystem = this.fs ? this.fs : fs;
+	const webpackRemainingChain = getRemainingRequest(this).split('!')
+	const filename = webpackRemainingChain[webpackRemainingChain.length - 1]
+  const babelrcPath = resolveRc(fileSystem, path.dirname(filename));
+
+  if (babelrcPath) {
+    this.addDependency(babelrcPath);
+	}
+	
+	return babelrcPath
+		? require(babelrcPath)
+		: undefined;
+}
+
 module.exports = function(source, sourceMap) {
 	var callback = this.async();
 
 	var options = this.query || {};
-	var babelOptions = options.babelOptions || {};
+	var babelOptions;
 	
-	// delete this key to prevent Rollup from complaining
-	delete options.babelOptions;
+	if (
+		options.babelOptions
+		&& typeof options.babelOptions === 'object'
+		&& !Array.isArray(options.babelOptions)
+	) {
+		babelOptions = options.babelOptions;
+		
+		// delete this key to prevent Rollup from complaining about extra options
+		delete options.babelOptions;
+	} else {
+		babelOptions = getExternalBabelOptions.call(this) || {}
+	}
+
 
 	var entryId = this.resourcePath;
 

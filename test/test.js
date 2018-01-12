@@ -94,15 +94,23 @@ test('transpiles ES6 to ES5 w/ Babel settings', async t => {
 	verifyNoES6(t, transpiledSrc);
 })
 
-test("Reads importing package's .babelrc if no babelOptions", async t => {
+test.after("Reads importing package's .babelrc if no babelOptions", async t => {
 	const { mockFs, compiler } = setupEnv('es6_file.js');
-	writeBabelrc(mockFs);
+	const babelPath = path.resolve(__dirname, '.babelrc') 
+
+	fs.writeFileSync(babelPath, `
+	{
+		"presets": ["env"]
+	}	
+	`)
 
 	await new Promise((resolve, reject) => {
 		compiler.run((err, stats) => {
 			err ? reject(err) : resolve(stats);
 		});
 	});
+
+	fs.unlinkSync(babelPath)
 
 	const transpiledSrc = mockFs.readFileSync('/bundle.js', 'utf8')
 	verifyNoES6(t, transpiledSrc);
