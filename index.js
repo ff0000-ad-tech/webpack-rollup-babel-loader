@@ -62,11 +62,11 @@ module.exports = function(source, sourceMap) {
 	) {
 		babelOptions = options.babelOptions;
 		
-		// delete this key to prevent Rollup from complaining about extra options
-		delete options.babelOptions;
 	} else {
 		babelOptions = getExternalBabelOptions.call(this) || {}
 	}
+	// delete this key to prevent Rollup from complaining about extra options
+	delete options.babelOptions;
 
 
 	var entryId = this.resourcePath;
