@@ -79,7 +79,6 @@ var simple = a + b + c;
 
 /* harmony default export */ __webpack_exports__["default"] = (simple);
 
-
 /***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map
