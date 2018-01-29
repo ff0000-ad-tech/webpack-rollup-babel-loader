@@ -35,11 +35,11 @@ function splitRequest(request) {
 }
 
 function cloneObjWithoutKeys(obj, ...keys) {
-	const overwriteObj = keys.reduce((accum, key) => {
-		accum[key] = undefined
-		return accum
-	}, {})
-	return Object.assign({}, obj, overwriteObj)
+	const newObj = Object.assign({}, obj)
+	keys.forEach((key) => {
+		delete newObj[key]
+	})
+	return newObj
 }
 
 function getExternalBabelOptions() {
