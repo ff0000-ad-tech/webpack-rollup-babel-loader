@@ -34,6 +34,14 @@ function splitRequest(request) {
 	}
 }
 
+function cloneObjWithoutKeys(obj, ...keys) {
+	const overwriteObj = keys.reduce((accum, key) => {
+		accum[key] = undefined
+		return accum
+	}, {})
+	return Object.assign({}, obj, overwriteObj)
+}
+
 function getExternalBabelOptions() {
 	const fileSystem = this.fs ? this.fs : fs;
 	const webpackRemainingChain = getRemainingRequest(this).split('!')
@@ -65,13 +73,13 @@ module.exports = function(source, sourceMap) {
 	} else {
 		babelOptions = getExternalBabelOptions.call(this) || {}
 	}
-	// delete this key to prevent Rollup from complaining about extra options
-	delete options.babelOptions;
+	// remove non-standard options to prevent Rollup from complaining about extra options
+	var rollupOptions = cloneObjWithoutKeys(options, 'babelOptions')
 
 
 	var entryId = this.resourcePath;
 
-	getRollupInstance().rollup(Object.assign({}, options, {
+	getRollupInstance().rollup(Object.assign({}, rollupOptions, {
 		input: entryId,
 		plugins: (options.plugins || []).concat({
 			resolveId: function(id, importerId) {
