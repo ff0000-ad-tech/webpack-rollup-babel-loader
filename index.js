@@ -50,25 +50,25 @@ function standardizeRollupOptions(options) {
 	// from https://rollupjs.org/guide/en#javascript-api
 	const standardInputOptions = [
 		// core options
-		input, // the only required option
-		external,
-		plugins,
+		'input', // the only required option
+		'external',
+		'plugins',
 	
 		// advanced options
-		onwarn,
-		cache,
+		'onwarn',
+		'cache',
 	
 		// danger zone
-		acorn,
-		acornInjectPlugins,
-		treeshake,
-		context,
-		moduleContext,
-		legacy,
+		'acorn',
+		'acornInjectPlugins',
+		'treeshake',
+		'context',
+		'moduleContext',
+		'legacy',
 						
 		// experimental
-		experimentalDynamicImport,
-		experimentalCodeSplitting
+		'experimentalDynamicImport',
+		'experimentalCodeSplitting'
 	]
 
 	return pick(options, standardInputOptions)
