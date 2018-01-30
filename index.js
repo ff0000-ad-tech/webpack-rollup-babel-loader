@@ -10,6 +10,7 @@ var path = require('path');
 var importFresh = require('import-fresh');
 var fs = require('fs')
 
+var createBinaryImporter = require('./lib/binary-imports.js')
 var resolveRc = require('./lib/resolve-rc.js')
 var exists = require('./lib/exists.js')
 var { getRemainingRequest } = require('loader-utils')
@@ -61,6 +62,9 @@ module.exports = function(source, sourceMap) {
 	var callback = this.async();
 
 	var options = this.query || {};
+	var fbaOptions = options.fbaOptions
+	var storeBinaryImports = createBinaryImporter(fbaOptions)
+
 	var babelOptions;
 	
 	if (
@@ -74,7 +78,7 @@ module.exports = function(source, sourceMap) {
 		babelOptions = getExternalBabelOptions.call(this) || {}
 	}
 	// remove non-standard options to prevent Rollup from complaining about extra options
-	var rollupOptions = cloneObjWithoutKeys(options, 'babelOptions')
+	var rollupOptions = cloneObjWithoutKeys(options, 'babelOptions', 'fbaOptions')
 
 
 	var entryId = this.resourcePath;
@@ -83,6 +87,11 @@ module.exports = function(source, sourceMap) {
 		input: entryId,
 		plugins: (options.plugins || []).concat({
 			resolveId: function(id, importerId) {
+
+				// store any binary imports for later plugins
+				// TODO: let's not do this b/c tight coupling and also weird
+				storeBinaryImports(id)
+
 				if (id === entryId) {
 					return entryId;
 				} else {
