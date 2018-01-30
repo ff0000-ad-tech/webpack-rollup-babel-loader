@@ -35,12 +35,43 @@ function splitRequest(request) {
 	}
 }
 
-function cloneObjWithoutKeys(obj, ...keys) {
-	const newObj = Object.assign({}, obj)
+// copy of Lodash pick
+function pick(obj, keys) {
+	const newObj = {}
+	
 	keys.forEach((key) => {
-		delete newObj[key]
+		newObj[key] = obj[key]
 	})
+
 	return newObj
+}
+
+function standardizeRollupOptions(options) {
+	// from https://rollupjs.org/guide/en#javascript-api
+	const standardInputOptions = [
+		// core options
+		input, // the only required option
+		external,
+		plugins,
+	
+		// advanced options
+		onwarn,
+		cache,
+	
+		// danger zone
+		acorn,
+		acornInjectPlugins,
+		treeshake,
+		context,
+		moduleContext,
+		legacy,
+						
+		// experimental
+		experimentalDynamicImport,
+		experimentalCodeSplitting
+	]
+
+	return pick(options, standardInputOptions)
 }
 
 function getExternalBabelOptions() {
@@ -80,8 +111,7 @@ module.exports = function(source, sourceMap) {
 		babelOptions = getExternalBabelOptions.call(this) || {}
 	}
 	// remove non-standard options to prevent Rollup from complaining about extra options
-	var rollupOptions = cloneObjWithoutKeys(options, 'babelOptions', 'fbaOptions')
-
+	var rollupOptions = standardizeRollupOptions(options)
 
 	var entryId = this.resourcePath;
 
