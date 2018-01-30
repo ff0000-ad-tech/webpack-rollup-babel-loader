@@ -65,6 +65,8 @@ module.exports = function(source, sourceMap) {
 	var fbaOptions = options.fbaOptions
 	var storeBinaryImports = createBinaryImporter(fbaOptions)
 
+	if (storeBinaryImports instanceof Error) callback(storeBinaryImports)
+
 	var babelOptions;
 	
 	if (
