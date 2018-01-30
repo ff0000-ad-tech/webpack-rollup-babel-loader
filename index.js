@@ -40,7 +40,7 @@ function pick(obj, keys) {
 	const newObj = {}
 	
 	keys.forEach((key) => {
-		newObj[key] = obj[key]
+		if (obj[key] !== undefined) newObj[key] = obj[key]
 	})
 
 	return newObj
@@ -65,10 +65,6 @@ function standardizeRollupOptions(options) {
 		'context',
 		'moduleContext',
 		'legacy',
-						
-		// experimental
-		'experimentalDynamicImport',
-		'experimentalCodeSplitting'
 	]
 
 	return pick(options, standardInputOptions)
