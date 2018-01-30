@@ -93,8 +93,9 @@ module.exports = function(source, sourceMap) {
 	var callback = this.async();
 
 	var options = this.query || {};
+	var deployManager = options.deployManager
 	var fbaOptions = options.fbaOptions
-	var storeBinaryImports = createBinaryImporter(fbaOptions)
+	var storeBinaryImports = createBinaryImporter(fbaOptions, deployManager)
 
 	if (storeBinaryImports instanceof Error) callback(storeBinaryImports)
 
