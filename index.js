@@ -115,12 +115,7 @@ module.exports = function(source, sourceMap) {
 	getRollupInstance().rollup(Object.assign({}, rollupOptions, {
 		input: entryId,
 		plugins: (options.plugins || []).concat({
-			resolveId: function(id, importerId) {
-
-				// store any binary imports for later plugins
-				// TODO: let's not do this b/c tight coupling and also weird
-				storeBinaryImports && storeBinaryImports(id)
-
+			resolveId: function(id, importerId) { 
 				if (id === entryId) {
 					return entryId;
 				} else {
@@ -128,6 +123,10 @@ module.exports = function(source, sourceMap) {
 						// split apart resource paths because Webpack's this.resolve() can't handle `loader!` prefixes
 						var parts = splitRequest(id);
 						var importerParts = splitRequest(importerId);
+
+						// store any binary imports for later plugins
+						// TODO: let's not do this b/c tight coupling and also weird
+						storeBinaryImports && storeBinaryImports(parts.resource, importerParts.resource)
 
 						// resolve the full path of the imported file with Webpack's module loader
 						// this will figure out node_modules imports, Webpack aliases, etc.
