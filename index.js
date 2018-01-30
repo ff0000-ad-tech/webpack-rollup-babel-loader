@@ -90,7 +90,7 @@ module.exports = function(source, sourceMap) {
 
 				// store any binary imports for later plugins
 				// TODO: let's not do this b/c tight coupling and also weird
-				storeBinaryImports(id)
+				storeBinaryImports && storeBinaryImports(id)
 
 				if (id === entryId) {
 					return entryId;
