@@ -124,25 +124,21 @@ module.exports = function(source, sourceMap) {
 						var parts = splitRequest(id);
 						var importerParts = splitRequest(importerId);
 
-						var importerContext = path.dirname(importerParts.resource)
-						var absImportPath = path.resolve(importerContext, parts.resource)
-
-						// add dependency to Webpack's list of files to watch
-						this.addDependency(absImportPath)
-
-						// store any binary imports for later plugins
-						// TODO: let's not do this b/c tight coupling and also weird
-						storeBinaryImports && storeBinaryImports(absImportPath)
-
 						// resolve the full path of the imported file with Webpack's module loader
 						// this will figure out node_modules imports, Webpack aliases, etc.
-						this.resolve(path.dirname(importerParts.resource), parts.resource, function(err, fullPath) {
+						this.resolve(path.dirname(importerParts.resource), parts.resource, function (err, fullPath) {
 							if (err) {
 								reject(err);
 							} else {
+								// store any binary imports for later plugins
+								storeBinaryImports && storeBinaryImports(fullPath)
+
+								// add dependency to Webpack's list of files to watch
+								this.addDependency(fullPath)
+
 								resolve(parts.loaders + fullPath);
 							}
-						});
+						}.bind(this));
 					}.bind(this));
 				}
 			}.bind(this),
