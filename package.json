@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Forked from erikdesjardins/webpack-rollup-loader, this loader applies Babel transformations after Rollup compiles a bundle to prevent Babel from affecting Rollup's tree shaking.",
   "main": "index.js",
   "scripts": {
