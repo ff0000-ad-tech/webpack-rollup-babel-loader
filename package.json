@@ -12,17 +12,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/derekmiranda/webpack-rollup-babel-loader.git"
+    "url": "https://github.com/ff0000-ad-tech/webpack-rollup-babel-loader.git"
   },
   "keywords": [
     "webpack"
   ],
   "author": "Erik Desjardins",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/derekmiranda/webpack-rollup-babel-loader/issues"
-  },
-  "homepage": "https://github.com/derekmiranda/webpack-rollup-babel-loader#readme",
   "peerDependencies": {
     "webpack": ">=3.3.0",
     "rollup": ">=0.50.0"
