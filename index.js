@@ -10,7 +10,7 @@ var path = require('path');
 var importFresh = require('import-fresh');
 var fs = require('fs')
 
-var createBinaryImporter = require('./lib/binary-imports.js')
+var createBinaryImporter = require('binary-imports')
 var resolveRc = require('./lib/resolve-rc.js')
 var exists = require('./lib/exists.js')
 var { getRemainingRequest } = require('loader-utils')
