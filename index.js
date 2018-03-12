@@ -20,17 +20,21 @@ function getRollupInstance() {
 	return importFresh('rollup');
 }
 
+function removeQueryStr(req) {
+	return req.replace(/\?.*$/, '')
+}
+
 function splitRequest(request) {
 	var inx = request.lastIndexOf('!');
 	if (inx === -1) {
 		return {
 			loaders: '',
-			resource: request
+			resource: removeQueryStr(request)
 		};
 	} else {
 		return {
 			loaders: request.slice(0, inx + 1),
-			resource: request.slice(inx + 1)
+			resource: removeQueryStr(request.slice(inx + 1))
 		};
 	}
 }
