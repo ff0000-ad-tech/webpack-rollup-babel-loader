@@ -112,9 +112,9 @@ module.exports = function(source, sourceMap) {
 	var rollupOptions = standardizeRollupOptions(options)
 
 	// putting CommonJS plugin after all others to allow any CommonJS export code to be handled by Rollup
-	var isCommonJs = plugin => plugin.name.includes('commonjs')
-var nonCjsPlugins = rollupOptions.plugins && rollupOptions.plugins.filter(plugin => !isCommonJs(plugin))
-	var cjsPlugins = rollupOptions.plugins && rollupOptions.plugins.filter(isCommonJs)
+var isCommonJs = plugin => plugin.name && plugin.name.includes('commonjs')
+	var nonCjsPlugins = (rollupOptions.plugins || []).filter(plugin => !isCommonJs(plugin))
+	var cjsPlugins = (rollupOptions.plugins || []).filter(isCommonJs)
 
 	var entryId = this.resourcePath;
 
