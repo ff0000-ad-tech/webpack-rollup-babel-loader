@@ -120,7 +120,7 @@ var isCommonJs = plugin => plugin.name && plugin.name.includes('commonjs')
 
 	getRollupInstance().rollup(Object.assign({}, rollupOptions, {
 		input: entryId,
-		plugins: (nonCjsPlugins || []).concat({
+		plugins: nonCjsPlugins.concat({
 			resolveId: (id, importerId) => { 
 				if (id === entryId) {
 					return entryId;
