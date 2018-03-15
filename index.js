@@ -20,21 +20,17 @@ function getRollupInstance() {
 	return importFresh('rollup');
 }
 
-function removeQueryStr(req) {
-	return req.replace(/\?.*$/, '')
-}
-
 function splitRequest(request) {
 	var inx = request.lastIndexOf('!');
 	if (inx === -1) {
 		return {
 			loaders: '',
-			resource: removeQueryStr(request)
+			resource: request
 		};
 	} else {
 		return {
 			loaders: request.slice(0, inx + 1),
-			resource: removeQueryStr(request.slice(inx + 1))
+			resource: request.slice(inx + 1)
 		};
 	}
 }
@@ -95,6 +91,7 @@ module.exports = function(source, sourceMap) {
 	var options = this.query || {};
 	var addBinaryAsset = options.addBinaryAsset
 	var fbaTypes = options.fbaTypes
+	var binaryIncludes = options.binaryIncludes
 	var storeBinaryImports = createBinaryImporter(fbaTypes, addBinaryAsset)
 
 	if (storeBinaryImports instanceof Error) callback(storeBinaryImports)
@@ -114,23 +111,28 @@ module.exports = function(source, sourceMap) {
 	// remove non-standard options to prevent Rollup from complaining about extra options
 	var rollupOptions = standardizeRollupOptions(options)
 
+	// putting CommonJS plugin after all others to allow any CommonJS export code to be handled by Rollup
+	var isCommonJs = plugin => plugin.name.includes('commonjs')
+	var nonCjsPlugins = rollupOptions.plugins.filter(plugin => !isCommonJs(plugin))
+	var cjsPlugins = rollupOptions.plugins.filter(isCommonJs)
+
 	var entryId = this.resourcePath;
 
 	getRollupInstance().rollup(Object.assign({}, rollupOptions, {
 		input: entryId,
-		plugins: (options.plugins || []).concat({
-			resolveId: function(id, importerId) { 
+		plugins: (nonCjsPlugins || []).concat({
+			resolveId: (id, importerId) => { 
 				if (id === entryId) {
 					return entryId;
 				} else {
-					return new Promise(function(resolve, reject) {
+					return new Promise((resolve, reject) => {
 						// split apart resource paths because Webpack's this.resolve() can't handle `loader!` prefixes
 						var parts = splitRequest(id);
 						var importerParts = splitRequest(importerId);
 
 						// resolve the full path of the imported file with Webpack's module loader
 						// this will figure out node_modules imports, Webpack aliases, etc.
-						this.resolve(path.dirname(importerParts.resource), parts.resource, function (err, fullPath) {
+						this.resolve(path.dirname(importerParts.resource), parts.resource, (err, fullPath) => {
 							if (err) {
 								reject(err);
 							} else {
@@ -142,15 +144,15 @@ module.exports = function(source, sourceMap) {
 
 								resolve(parts.loaders + fullPath);
 							}
-						}.bind(this));
-					}.bind(this));
+						});
+					});
 				}
-			}.bind(this),
-			load: function(id) {
+			},
+			load: (id) => {
 				if (id === entryId) {
 					return { code: source, map: sourceMap };
 				}
-				return new Promise(function(resolve, reject) {
+				return new Promise((resolve, reject) => {
 					// load the module with Webpack
 					// this will apply all relevant loaders, etc.
 					this.loadModule(id, function(err, source, map, module) {
@@ -160,31 +162,16 @@ module.exports = function(source, sourceMap) {
 						}
 						resolve({ code: source, map: map });
 					});
-				}.bind(this));
-			}.bind(this),
+				})
+			}
 		})
+		// allows handling any CommonJS output from Webpack loaders
+		.concat(cjsPlugins)
 	}))
 	.then(function(bundle) {
 		return bundle.generate({ format: 'es', sourcemap: true });
 	})
 	.then(function(result) {
-
-		// current Babel options as of 1/8/18
-		// var babelOptions = {
-		// 	"presets": [
-		// 		[
-		// 			"env",
-		// 			{
-		// 				"loose": true,
-		// 				"modules": false
-		// 			}
-		// 		]
-		// 	],
-		// 	"plugins": [
-		// 		"transform-class-properties"
-		// 	]
-		// }
-
 		// apply Babel transform to Bundle directly from output
 		// instead of on every .js file thru Webpack Loader
 		var babelRes = Object.keys(babelOptions)
