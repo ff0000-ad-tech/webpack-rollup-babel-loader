@@ -1,2 +1,7 @@
-package-lock.json
+.prettierrc
+.package-lock.json
+.eslintrc
+.eslintignore
+CONTRIBUTING.md
+.travis.yml
 test/
