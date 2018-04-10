@@ -24,7 +24,7 @@
     "rollup": ">=0.50.0"
   },
   "dependencies": {
-    "binary-imports": "git+https://github.com/ff0000-ad-tech/binary-imports.git",
+    "@ff0000-ad-tech/binary-imports": "latest",
     "import-fresh": "^2.0.0",
     "loader-utils": "^1.1.0",
     "rollup-pluginutils": "^2.0.1"
