@@ -1,19 +1,20 @@
 {
-  "name": "webpack-rollup-babel-loader",
+  "name": "@ff0000-ad-tech/webpack-rollup-babel-loader",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.6.2",
   "description": "Forked from erikdesjardins/webpack-rollup-loader, this loader applies Babel transformations after Rollup compiles a bundle to prevent Babel from affecting Rollup's tree shaking.",
   "main": "index.js",
   "scripts": {
-    "pub": "npm np",
+    "pub": "np",
     "test": "ava test/test.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ff0000-ad-tech/webpack-rollup-babel-loader.git"
   },
-  "keywords": [
-    "webpack"
-  ],
+  "keywords": ["webpack"],
   "author": "Erik Desjardins",
   "license": "MIT",
   "peerDependencies": {
@@ -29,11 +30,16 @@
   "devDependencies": {
     "ava": "^0.21.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.1",
+    "eslint": "^4.16.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.5.0",
     "file-loader": "^0.11.2",
     "memory-fs": "^0.4.1",
     "np": "^2.19.0",
+    "prettier": "^1.10.2",
     "rollup": "^0.50.0",
     "rollup-plugin-commonjs": "^8.1.0",
     "webpack": "^3.3.0"
