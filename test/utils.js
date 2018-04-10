@@ -6,9 +6,10 @@ exports.verifyNoES6 = function(t, code) {
 }
 
 exports.writeBabelrc = function(mockFs) {
-	mockFs.writeFileSync('/.babelrc', `
-		{
+	mockFs.writeFileSync(
+		'/.babelrc',
+		`{
 			presets: ['env']
-		}
-	`)
+		}`
+	)
 }
