@@ -5,7 +5,7 @@
 
 'use strict'
 
-var babel = require('babel-core')
+var babel = require('@babel/core')
 var path = require('path')
 var importFresh = require('import-fresh')
 var fs = require('fs')
