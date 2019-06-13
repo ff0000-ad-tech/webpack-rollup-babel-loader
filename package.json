@@ -20,7 +20,7 @@
   "author": "Erik Desjardins",
   "license": "MIT",
   "peerDependencies": {
-    "webpack": ">=3.3.0",
+    "webpack": "4.x",
     "rollup": ">=0.50.0"
   },
   "dependencies": {
@@ -43,7 +43,6 @@
     "np": "^2.19.0",
     "prettier": "^1.10.2",
     "rollup": "^0.50.0",
-    "rollup-plugin-commonjs": "^8.1.0",
-    "webpack": "^3.3.0"
+    "rollup-plugin-commonjs": "^8.1.0"
   }
 }
