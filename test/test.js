@@ -82,7 +82,7 @@ test('external option', fixture, 'external.js', { external: [path.join(__dirname
 test('transpiles ES6 to ES5 w/ Babel settings', async t => {
 	const { mockFs, compiler } = setupEnv('es6_file.js', {
 		babelOptions: {
-			presets: ['env']
+			presets: ['@babel/preset-env']
 		}
 	})
 
@@ -104,7 +104,7 @@ test.after("Reads importing package's .babelrc if no babelOptions", async t => {
 		babelPath,
 		`
 	{
-		"presets": ["env"]
+		"presets": ["@babel/preset-env"]
 	}	
 	`
 	)

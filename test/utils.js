@@ -9,7 +9,7 @@ exports.writeBabelrc = function(mockFs) {
 	mockFs.writeFileSync(
 		'/.babelrc',
 		`{
-			presets: ['env']
+			presets: ['@babel/preset-env']
 		}`
 	)
 }
