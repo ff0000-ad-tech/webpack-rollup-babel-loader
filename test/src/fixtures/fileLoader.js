@@ -1,3 +1,3 @@
-import { filename } from '../hi';
+import hi from '../hi'
 
-export const hi = filename;
+export const msg = hi
