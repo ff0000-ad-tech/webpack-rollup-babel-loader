@@ -26,8 +26,8 @@
   "dependencies": {
     "@ff0000-ad-tech/binary-imports": "latest",
     "import-fresh": "^2.0.0",
-    "loader-utils": "^1.2.3",
-    "rollup-pluginutils": "^2.8.1"
+    "loader-utils": "^1.1.0",
+    "rollup-pluginutils": "^2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -36,12 +36,12 @@
     "ava": "^0.21.0",
     "babel-eslint": "^9.0.0",
     "eslint": "^4.16.0",
-    "eslint-config-prettier": "^2.10.0",
-    "eslint-plugin-prettier": "^2.7.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.5.0",
     "file-loader": "^0.11.2",
     "memory-fs": "^0.4.1",
     "np": "^2.19.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.10.2",
     "rollup": "^0.50.0",
     "rollup-plugin-commonjs": "^8.1.0",
     "webpack": "^4.34.0"
