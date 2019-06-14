@@ -13,6 +13,7 @@ function normalize(string) {
 function setupEnv(entry, options) {
 	const entryPath = path.join(__dirname, 'src', 'fixtures', entry)
 	const compiler = webpack({
+		mode: 'none',
 		entry: entryPath,
 		bail: true,
 		output: {
@@ -54,13 +55,11 @@ async function fixture(t, entry, options) {
 		})
 	})
 
-	/* 
-	// uncomment to update expected files 
-	const bundle = mockFs.readFileSync('/bundle.js', 'utf8');
-	fs.writeFileSync(path.join(__dirname, 'src', 'expected', entry), bundle.replace(/\r/g, ''));
-	const sourcemap = mockFs.readFileSync('/bundle.js.map', 'utf8');
-	fs.writeFileSync(path.join(__dirname, 'src', 'expected', `${entry}.map`), sourcemap.replace(/\\r/g, ''));
-	 */
+	// uncomment to update expected files
+	/* const bundle = mockFs.readFileSync('/bundle.js', 'utf8')
+	fs.writeFileSync(path.join(__dirname, 'src', 'expected', entry), bundle.replace(/\r/g, ''))
+	const sourcemap = mockFs.readFileSync('/bundle.js.map', 'utf8')
+	fs.writeFileSync(path.join(__dirname, 'src', 'expected', `${entry}.map`), sourcemap.replace(/\\r/g, '')) */
 
 	t.is(
 		normalize(mockFs.readFileSync('/bundle.js', 'utf8')),
@@ -75,7 +74,7 @@ async function fixture(t, entry, options) {
 
 test('simple', fixture, 'simple.js')
 
-test('plugins option', fixture, 'fileLoader.js', { plugins: [commonjs({ extensions: ['.js', '.jpg'] })] })
+test('plugins option', fixture, 'fileLoader.js', { plugins: [commonjs({ extensions: ['.js'] })] })
 
 test('external option', fixture, 'external.js', { external: [path.join(__dirname, 'src', 'b.js')] })
 
@@ -100,23 +99,23 @@ test.after("Reads importing package's .babelrc if no babelOptions", async t => {
 	const { mockFs, compiler } = setupEnv('es6_file.js')
 	const babelPath = path.resolve(__dirname, '.babelrc')
 
-	fs.writeFileSync(
-		babelPath,
-		`
-	{
-		"presets": ["@babel/preset-env"]
-	}	
-	`
-	)
+	fs.writeFileSync(babelPath, `{"presets": ["@babel/preset-env"]}`)
 
-	await new Promise((resolve, reject) => {
-		compiler.run((err, stats) => {
-			err ? reject(err) : resolve(stats)
+	try {
+		await new Promise((resolve, reject) => {
+			compiler.run((err, stats) => {
+				err ? reject(err) : resolve(stats)
+			})
+		}).catch(err => {
+			throw err
 		})
-	})
+	} catch (err) {
+		throw err
+	}
 
 	fs.unlinkSync(babelPath)
 
 	const transpiledSrc = mockFs.readFileSync('/bundle.js', 'utf8')
+	fs.writeFileSync('output.js', transpiledSrc)
 	verifyNoES6(t, transpiledSrc)
 })
