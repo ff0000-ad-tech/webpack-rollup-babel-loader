@@ -80,7 +80,12 @@ function getExternalBabelOptions() {
 		this.addDependency(babelrcPath)
 	}
 
-	return babelrcPath ? require(babelrcPath) : undefined
+	return babelrcPath ? readJSON(babelrcPath) : undefined
+}
+
+function readJSON(path) {
+	const src = fs.readFileSync(path, 'utf8')
+	return JSON.parse(src)
 }
 
 module.exports = function(source, sourceMap) {
