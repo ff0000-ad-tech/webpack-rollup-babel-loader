@@ -116,6 +116,5 @@ test.after("Reads importing package's .babelrc if no babelOptions", async t => {
 	fs.unlinkSync(babelPath)
 
 	const transpiledSrc = mockFs.readFileSync('/bundle.js', 'utf8')
-	fs.writeFileSync('output.js', transpiledSrc)
 	verifyNoES6(t, transpiledSrc)
 })
