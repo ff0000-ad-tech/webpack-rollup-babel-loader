@@ -9,6 +9,7 @@ var babel = require('@babel/core')
 var path = require('path')
 var importFresh = require('import-fresh')
 var fs = require('fs')
+var rollupBabel = require('rollup-plugin-babel')
 
 var createBinaryImporter = require('@ff0000-ad-tech/binary-imports')
 var resolveRc = require('./lib/resolve-rc.js')
@@ -111,8 +112,9 @@ module.exports = function(source, sourceMap) {
 
 	// putting CommonJS plugin after all others to allow any CommonJS export code to be handled by Rollup
 	var isCommonJs = plugin => plugin.name && plugin.name.includes('commonjs')
-	var nonCjsPlugins = (rollupOptions.plugins || []).filter(plugin => !isCommonJs(plugin))
-	var cjsPlugins = (rollupOptions.plugins || []).filter(isCommonJs)
+	var basePlugins = (rollupOptions.plugins || []).concat(rollupBabel(babelOptions))
+	var nonCjsPlugins = basePlugins.filter(plugin => !isCommonJs(plugin))
+	var cjsPlugins = basePlugins.filter(isCommonJs)
 
 	var entryId = this.resourcePath
 
@@ -177,9 +179,10 @@ module.exports = function(source, sourceMap) {
 			function(result) {
 				// apply Babel transform to Bundle directly from output
 				// instead of on every .js file thru Webpack Loader
-				var babelRes = Object.keys(babelOptions) ? babel.transform(result.code, babelOptions) : result
+				// var babelRes = Object.keys(babelOptions) ? babel.transform(result.code, babelOptions) : result
 
-				callback(null, babelRes.code, babelRes.map)
+				// callback(null, babelRes.code, babelRes.map)
+				callback(null, result.code, result.map)
 			},
 			function(err) {
 				callback(err)
