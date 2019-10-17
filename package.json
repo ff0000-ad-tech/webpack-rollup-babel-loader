@@ -21,7 +21,7 @@
   "license": "MIT",
   "peerDependencies": {
     "webpack": "4.x",
-    "rollup": ">=0.50.0"
+    "rollup": ">=1.0.0"
   },
   "dependencies": {
     "@ff0000-ad-tech/binary-imports": "latest",
@@ -42,7 +42,7 @@
     "memory-fs": "^0.4.1",
     "np": "^2.19.0",
     "prettier": "^1.10.2",
-    "rollup": "^0.50.0",
+    "rollup": "^1.0.0",
     "rollup-plugin-commonjs": "^8.1.0",
     "webpack": "^4.34.0"
   }
