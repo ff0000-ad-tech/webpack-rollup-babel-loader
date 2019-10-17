@@ -177,7 +177,8 @@ module.exports = function(source, sourceMap) {
 			function(result) {
 				// apply Babel transform to Bundle directly from output
 				// instead of on every .js file thru Webpack Loader
-				var babelRes = Object.keys(babelOptions) ? babel.transform(result.code, babelOptions) : result
+        var mainChunk = result.output[0]
+				var babelRes = Object.keys(babelOptions) ? babel.transform(mainChunk.code, babelOptions) : mainChunk
 
 				callback(null, babelRes.code, babelRes.map)
 			},
