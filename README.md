@@ -4,7 +4,7 @@ Forked from [erikdesjardins/webpack-rollup-loader](https://github.com/erikdesjar
 
 ## Installation
   
-`npm install --save-dev git://github.com/derekmiranda/webpack-rollup-babel-loader.git` 
+`npm install --save-dev @ff0000-ad-tech/webpack-rollup-babel-loader` 
 
 Rollup is a peer dependency, and must also be installed:
 
