@@ -109,10 +109,15 @@ module.exports = function(source, sourceMap) {
 	// remove non-standard options to prevent Rollup from complaining about extra options
 	var rollupOptions = standardizeRollupOptions(options)
 
+	var prePlugins = options.prePlugins || []
+	var postPlugins = options.postPlugins || []
+
 	// putting CommonJS plugin after all others to allow any CommonJS export code to be handled by Rollup
 	var isCommonJs = plugin => plugin.name && plugin.name.includes('commonjs')
-	var nonCjsPlugins = (rollupOptions.plugins || []).filter(plugin => !isCommonJs(plugin))
-	var cjsPlugins = (rollupOptions.plugins || []).filter(isCommonJs)
+
+	// still using "plugins" option for backwards-compatibility
+	prePlugins = prePlugins.concat(rollupOptions.plugins || []).filter(plugin => !isCommonJs(plugin))
+	postPlugins = postPlugins.concat(rollupOptions.plugins || []).filter(isCommonJs)
 
 	var entryId = this.resourcePath
 
@@ -120,7 +125,7 @@ module.exports = function(source, sourceMap) {
 		.rollup(
 			Object.assign({}, rollupOptions, {
 				input: entryId,
-				plugins: nonCjsPlugins
+				plugins: prePlugins
 					.concat({
 						resolveId: (id, importerId) => {
 							if (id === entryId) {
@@ -167,7 +172,7 @@ module.exports = function(source, sourceMap) {
 						}
 					})
 					// allows handling any CommonJS output from Webpack loaders
-					.concat(cjsPlugins)
+					.concat(postPlugins)
 			})
 		)
 		.then(function(bundle) {
