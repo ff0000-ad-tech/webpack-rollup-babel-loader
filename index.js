@@ -51,6 +51,7 @@ function standardizeRollupOptions(options) {
 	const standardInputOptions = [
 		// core options
 		'input', // the only required option
+		'output',
 		'external',
 		'plugins',
 
